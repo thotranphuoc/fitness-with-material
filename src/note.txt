@@ -1,0 +1,2 @@
+- integrate angular flex layout
+npm install @angular/flex-layout --save
