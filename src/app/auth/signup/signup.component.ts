@@ -16,7 +16,7 @@ export class SignupComponent implements OnInit {
     console.log(this.maxDate);
   }
 
-  submit(f: NgForm, e: NgModel, p: NgModel){
-    console.log(f,e,p);
+  submit(f: NgForm){
+    console.log(f);
   }
 }
