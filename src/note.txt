@@ -1,2 +1,4 @@
 - integrate angular flex layout
 npm install @angular/flex-layout --save
+
+- add ReactiveFormsModule to into app.module.ts to use Reactive Form
