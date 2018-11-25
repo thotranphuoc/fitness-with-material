@@ -33,6 +33,7 @@
         matInput
         placeholder="Your birthdate"
         [matDatepicker]="picker"
+        [max]="maxDate"
       >
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
