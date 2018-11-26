@@ -4,6 +4,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule, MatInputModule, MatCheckboxModule, MatSidenavModule, MatToolbarModule, MatListModule } from '@angular/material'
 import {MatDatepickerModule, MatNativeDateModule} from '@angular/material';
 import {MatTabsModule} from '@angular/material/tabs';
+import {MatCardModule} from '@angular/material/card';
+import {MatSelectModule} from '@angular/material/select';
 const materialModules = [
     MatButtonModule,
     MatIconModule,
@@ -15,7 +17,9 @@ const materialModules = [
     MatSidenavModule,
     MatToolbarModule,
     MatListModule,
-    MatTabsModule
+    MatTabsModule,
+    MatCardModule,
+    MatSelectModule
 ] 
 @NgModule({
     imports: materialModules, // posible to comment this
