@@ -16,6 +16,8 @@ import { NewTrainingComponent } from './training/new-training/new-training.compo
 import { PastTrainingsComponent } from './training/past-trainings/past-trainings.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { FlexboxComponent } from './example/flexbox/flexbox.component';
+import { HeaderComponent } from './navigation/header/header.component';
+import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
 
 
 @NgModule({
@@ -29,7 +31,9 @@ import { FlexboxComponent } from './example/flexbox/flexbox.component';
     NewTrainingComponent,
     PastTrainingsComponent,
     WelcomeComponent,
-    FlexboxComponent
+    FlexboxComponent,
+    HeaderComponent,
+    SidenavListComponent
   ],
   imports: [
     BrowserModule,
