@@ -2,3 +2,12 @@
 npm install @angular/flex-layout --save
 
 - add ReactiveFormsModule to into app.module.ts to use Reactive Form
+
+- Add firebase into project
+npm install --save firebase
+firebase login
+firebase init
+firebase login
+
+- to hide url bar:
+https://stackoverflow.com/questions/24889100/ios-8-removed-minimal-ui-viewport-property-are-there-other-soft-fullscreen

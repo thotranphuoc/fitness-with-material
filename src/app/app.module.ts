@@ -19,6 +19,10 @@ import { FlexboxComponent } from './example/flexbox/flexbox.component';
 import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
 
+import * as firebase from 'firebase';
+import { firebaseConf } from 'src/unshares/firebase.config';
+
+var app = firebase.initializeApp(firebaseConf);
 
 @NgModule({
   declarations: [
