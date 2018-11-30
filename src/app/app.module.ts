@@ -21,6 +21,7 @@ import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.com
 
 import * as firebase from 'firebase';
 import { firebaseConf } from 'src/unshares/firebase.config';
+import { StopTrainingCompoent } from './training/current-training/stop-trainig.component';
 
 var app = firebase.initializeApp(firebaseConf);
 
@@ -37,7 +38,8 @@ var app = firebase.initializeApp(firebaseConf);
     WelcomeComponent,
     FlexboxComponent,
     HeaderComponent,
-    SidenavListComponent
+    SidenavListComponent,
+    StopTrainingCompoent
   ],
   imports: [
     BrowserModule,
@@ -49,6 +51,9 @@ var app = firebase.initializeApp(firebaseConf);
     ReactiveFormsModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents:[
+    StopTrainingCompoent
+  ]
 })
 export class AppModule { }
