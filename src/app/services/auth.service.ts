@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
   authChange = new Subject<boolean>();
-  private user: iUser
+  private user: iUser = null;
   constructor(
     private router: Router
   ) { }

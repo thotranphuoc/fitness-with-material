@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-training',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TrainingComponent implements OnInit {
   onGoingTraining = false;
-  constructor() { }
+  constructor(private authService: AuthService) {
+    
+   }
 
   ngOnInit() {
+    console.log(this.authService.isAuth());
   }
 
 }
