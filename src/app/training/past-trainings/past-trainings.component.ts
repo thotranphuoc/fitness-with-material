@@ -10,7 +10,7 @@ import { MatSort, MatTableDataSource } from '@angular/material';
 })
 export class PastTrainingsComponent implements OnInit {
   // dataSource: iExercise[] =[];
-  dataSource ;
+  dataSource;
   displayedColumns = ['date', 'name', 'calories', 'state'];
 
   @ViewChild(MatSort) sort: MatSort
@@ -22,10 +22,14 @@ export class PastTrainingsComponent implements OnInit {
     this.getMyExercises();
   }
 
-  getMyExercises(){
+  getMyExercises() {
     // this.dataSource = this.trainingService.getMyExercises();
     this.dataSource = new MatTableDataSource<iExercise>(this.trainingService.getMyExercises());
     this.dataSource.sort = this.sort;
   }
 
+  filter(filterValue: string) {
+    console.log(filterValue);
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
 }
