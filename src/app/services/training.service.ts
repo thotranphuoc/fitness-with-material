@@ -2,28 +2,58 @@
 import { Injectable } from '@angular/core';
 import { iExercise } from '../interfaces/exercise.interface';
 import { Subject } from 'rxjs';
+import { map } from 'rxjs/operators'
+import { AngularFirestore } from '@angular/fire/firestore';
 @Injectable({
   providedIn: 'root'
 })
 export class TrainingService {
   exerciseChanged = new Subject<iExercise>();
-  Exercises: iExercise[] = [
-    { id: 'crunches', name: 'Crunches', duration: 30, calories: 8 },
-    { id: 'touch-toes', name: 'Touch Toes', duration: 180, calories: 15 },
-    { id: 'side-lunges', name: 'Side Lunges', duration: 120, calories: 18 },
-    { id: 'burpees', name: 'Burpees', duration: 60, calories: 8 }
-  ]
+  exercisesChanged = new Subject<iExercise[]>(); // moi khi exercises updated;
+  // Exercises: iExercise[] = [
+  //   { id: 'crunches', name: 'Crunches', duration: 30, calories: 8 },
+  //   { id: 'touch-toes', name: 'Touch Toes', duration: 180, calories: 15 },
+  //   { id: 'side-lunges', name: 'Side Lunges', duration: 120, calories: 18 },
+  //   { id: 'burpees', name: 'Burpees', duration: 60, calories: 8 }
+  // ]
+
+  availableExercises: iExercise[] =[];
   runningExercise: iExercise;
 
   myExercises: iExercise[] = [];
-  constructor() { }
+  constructor( private afs: AngularFirestore) { }
 
-  getExerices(){
-    return this.Exercises.slice();
+  // getExerices(){
+  //   return this.availableExercises.slice();
+  // }
+
+  fetchExercises(){
+    this.afs.collection('availableExercises')
+    .snapshotChanges()
+    .pipe(
+      map(docArray => {
+        return docArray.map(doc=>{
+          return {
+            id: doc.payload.doc.id,
+            // ... doc.payload.doc.data() as iExercise,
+            name: doc.payload.doc.data()['name'],
+            duration: doc.payload.doc.data()['duration'],
+            calories: doc.payload.doc.data()['calories']
+          }
+        })
+        
+      })
+    )
+    .subscribe((exercises: iExercise[])=>{
+      this.availableExercises = exercises;
+      this.exercisesChanged.next(this.availableExercises.slice());
+      // this.exercisesChanged.next([...this.availableExercises]); // same line above
+    })
+  
   }
 
   startExercise(selectedID: string){
-    this.runningExercise = this.Exercises.find(ex=> ex.id == selectedID);
+    this.runningExercise = this.availableExercises.find(ex=> ex.id == selectedID);
     this.exerciseChanged.next({...this.runningExercise});
   }
 
