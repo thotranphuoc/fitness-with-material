@@ -58,7 +58,7 @@ export class TrainingService {
   }
 
   completeExercise(){
-    this.myExercises.push({
+    this.addMyExercise2FB({
       ... this.runningExercise,
       date: new Date(),
       state: 'completed' 
@@ -69,7 +69,14 @@ export class TrainingService {
   }
 
   cancelExercise(progressNumber: number){
-    this.myExercises.push({
+    // this.myExercises.push({
+    //   ... this.runningExercise,
+    //   duration: this.runningExercise.duration*(progressNumber/100),
+    //   calories: this.runningExercise.calories*(progressNumber/100),
+    //   date: new Date(),
+    //   state: 'cancelled' 
+    // });
+    this.addMyExercise2FB({
       ... this.runningExercise,
       duration: this.runningExercise.duration*(progressNumber/100),
       calories: this.runningExercise.calories*(progressNumber/100),
@@ -87,6 +94,10 @@ export class TrainingService {
 
   getMyExercises(){
     return this.myExercises.slice();
+  }
+
+  addMyExercise2FB(exercise: iExercise){
+    this.afs.collection('myExercises').add(exercise);
   }
 
 
