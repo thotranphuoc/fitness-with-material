@@ -1,4 +1,6 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { iExercise } from 'src/app/interfaces/exercise.interface';
+import { TrainingService } from 'src/app/services/training.service';
 
 @Component({
   selector: 'app-new-training',
@@ -6,20 +8,20 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
   styleUrls: ['./new-training.component.css']
 })
 export class NewTrainingComponent implements OnInit {
-  foods = [
-    {viewValue: 'Crunches', value: 'crunches'},
-    {viewValue: 'Touch Toes', value: 'touch-toe'},
-    {viewValue: 'Side Lunges', value: 'side-lunges'},
-    {viewValue: 'Burpees', value: 'burpees'},
-  ]
-  constructor() { }
-  @Output() trainingStart = new EventEmitter();
+  availableExercises: iExercise[] =[];
+  constructor(
+    private trainingService: TrainingService
+  ) { }
+  // @Output() trainingStart = new EventEmitter();
   
   ngOnInit() {
+    this.availableExercises = this.trainingService.getExerices();
   }
 
-  onTrainingStart(){
-    this.trainingStart.emit();
+  onTrainingStart(f){
+    console.log(f)
+    // this.trainingService.startExercise()
+    this.trainingService.startExercise(f.value.selectedID);
   }
 
 }
