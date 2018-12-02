@@ -5,6 +5,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 
 import { MaterialModule } from '../shares/material.module';
 import { ExampleMaterialComponent } from './example-material/example-material.component';
@@ -19,11 +21,11 @@ import { FlexboxComponent } from './example/flexbox/flexbox.component';
 import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
 
-import * as firebase from 'firebase';
+// import * as firebase from 'firebase';
 import { firebaseConf } from 'src/unshares/firebase.config';
 import { StopTrainingCompoent } from './training/current-training/stop-trainig.component';
 
-var app = firebase.initializeApp(firebaseConf);
+// var app = firebase.initializeApp(firebaseConf);
 
 @NgModule({
   declarations: [
@@ -48,7 +50,9 @@ var app = firebase.initializeApp(firebaseConf);
     MaterialModule,
     FlexLayoutModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AngularFireModule.initializeApp(firebaseConf),
+    AngularFirestoreModule
   ],
   providers: [],
   bootstrap: [AppComponent],
