@@ -10,6 +10,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 export class TrainingService {
   exerciseChanged = new Subject<iExercise>();
   exercisesChanged = new Subject<iExercise[]>(); // moi khi exercises updated;
+  myExercisesChanged = new Subject<iExercise[]>();
   // Exercises: iExercise[] = [
   //   { id: 'crunches', name: 'Crunches', duration: 30, calories: 8 },
   //   { id: 'touch-toes', name: 'Touch Toes', duration: 180, calories: 15 },
@@ -94,6 +95,13 @@ export class TrainingService {
 
   getMyExercises(){
     return this.myExercises.slice();
+  }
+
+  fetchMyExercises(){
+    this.afs.collection('myExercises').valueChanges().subscribe((exercises: iExercise[])=>{
+      this.myExercises = exercises;
+      this.myExercisesChanged.next(exercises);
+    })
   }
 
   addMyExercise2FB(exercise: iExercise){

@@ -11,6 +11,9 @@ firebase login
 
 - to hide url bar:
 https://stackoverflow.com/questions/24889100/ios-8-removed-minimal-ui-viewport-property-are-there-other-soft-fullscreen
-
+ 
 - install angularfire
 npm install firebase @angular/fire --save
+
+- to fix err date cannot displayed:
+https://www.udemy.com/angular-full-app-with-angular-material-angularfire-ngrx/learn/v4/questions/4298762
