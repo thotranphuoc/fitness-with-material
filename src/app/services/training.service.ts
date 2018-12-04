@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { iExercise } from '../interfaces/exercise.interface';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators'
 import { AngularFirestore } from '@angular/fire/firestore';
 @Injectable({
@@ -11,6 +11,7 @@ export class TrainingService {
   exerciseChanged = new Subject<iExercise>();
   exercisesChanged = new Subject<iExercise[]>(); // moi khi exercises updated;
   myExercisesChanged = new Subject<iExercise[]>();
+  fbSub: Subscription[] = [];
   // Exercises: iExercise[] = [
   //   { id: 'crunches', name: 'Crunches', duration: 30, calories: 8 },
   //   { id: 'touch-toes', name: 'Touch Toes', duration: 180, calories: 15 },
@@ -18,58 +19,60 @@ export class TrainingService {
   //   { id: 'burpees', name: 'Burpees', duration: 60, calories: 8 }
   // ]
 
-  availableExercises: iExercise[] =[];
+  availableExercises: iExercise[] = [];
   runningExercise: iExercise;
 
   myExercises: iExercise[] = [];
-  constructor( private afs: AngularFirestore) { }
+  constructor(private afs: AngularFirestore) { }
 
   // getExerices(){
   //   return this.availableExercises.slice();
   // }
 
-  fetchExercises(){
-    this.afs.collection('availableExercises')
-    .snapshotChanges()
-    .pipe(
-      map(docArray => {
-        return docArray.map(doc=>{
-          return {
-            id: doc.payload.doc.id,
-            // ... doc.payload.doc.data() as iExercise,
-            name: doc.payload.doc.data()['name'],
-            duration: doc.payload.doc.data()['duration'],
-            calories: doc.payload.doc.data()['calories']
-          }
+  fetchExercises() {
+    this.fbSub.push(this.afs.collection('availableExercises')
+      .snapshotChanges()
+      .pipe(
+        map(docArray => {
+          return docArray.map(doc => {
+            return {
+              id: doc.payload.doc.id,
+              // ... doc.payload.doc.data() as iExercise,
+              name: doc.payload.doc.data()['name'],
+              duration: doc.payload.doc.data()['duration'],
+              calories: doc.payload.doc.data()['calories']
+            }
+          })
+
         })
-        
-      })
-    )
-    .subscribe((exercises: iExercise[])=>{
-      this.availableExercises = exercises;
-      this.exercisesChanged.next(this.availableExercises.slice());
-      // this.exercisesChanged.next([...this.availableExercises]); // same line above
-    })
-  
+      )
+      .subscribe((exercises: iExercise[]) => {
+        this.availableExercises = exercises;
+        this.exercisesChanged.next(this.availableExercises.slice());
+        // this.exercisesChanged.next([...this.availableExercises]); // same line above
+        // },
+        //   err => {
+        //     console.log(err);
+      }))
   }
 
-  startExercise(selectedID: string){
-    this.runningExercise = this.availableExercises.find(ex=> ex.id == selectedID);
-    this.exerciseChanged.next({...this.runningExercise});
+  startExercise(selectedID: string) {
+    this.runningExercise = this.availableExercises.find(ex => ex.id == selectedID);
+    this.exerciseChanged.next({ ...this.runningExercise });
   }
 
-  completeExercise(){
+  completeExercise() {
     this.addMyExercise2FB({
       ... this.runningExercise,
       date: new Date(),
-      state: 'completed' 
+      state: 'completed'
     });
     this.runningExercise = null;
     this.exerciseChanged.next(null);
     console.log(this.myExercises);
   }
 
-  cancelExercise(progressNumber: number){
+  cancelExercise(progressNumber: number) {
     // this.myExercises.push({
     //   ... this.runningExercise,
     //   duration: this.runningExercise.duration*(progressNumber/100),
@@ -79,33 +82,45 @@ export class TrainingService {
     // });
     this.addMyExercise2FB({
       ... this.runningExercise,
-      duration: this.runningExercise.duration*(progressNumber/100),
-      calories: this.runningExercise.calories*(progressNumber/100),
+      duration: this.runningExercise.duration * (progressNumber / 100),
+      calories: this.runningExercise.calories * (progressNumber / 100),
       date: new Date(),
-      state: 'cancelled' 
+      state: 'cancelled'
     });
     this.runningExercise = null;
     this.exerciseChanged.next(null);
     console.log(this.myExercises);
   }
 
-  getRunningExercise(){
-    return {... this.runningExercise};
+  getRunningExercise() {
+    return { ... this.runningExercise };
   }
 
-  getMyExercises(){
+  getMyExercises() {
     return this.myExercises.slice();
   }
 
-  fetchMyExercises(){
-    this.afs.collection('myExercises').valueChanges().subscribe((exercises: iExercise[])=>{
-      this.myExercises = exercises;
-      this.myExercisesChanged.next(exercises);
-    })
+  fetchMyExercises() {
+    this.fbSub.push(this.afs.collection('myExercises')
+      .valueChanges()
+      .subscribe(
+        (exercises: iExercise[]) => {
+          this.myExercises = exercises;
+          this.myExercisesChanged.next(exercises);
+          // },
+          // err => {
+          //   console.log(err);
+        }))
   }
 
-  addMyExercise2FB(exercise: iExercise){
+  addMyExercise2FB(exercise: iExercise) {
     this.afs.collection('myExercises').add(exercise);
+  }
+
+  cancelSubscription(){
+    this.fbSub.forEach(sub=>{
+      sub.unsubscribe();
+    })
   }
 
 

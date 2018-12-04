@@ -4,6 +4,7 @@ import { iUser } from '../interfaces/user.interface';
 import { iAuthData } from '../interfaces/auth-data.interface';
 import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { TrainingService } from './training.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,23 +15,40 @@ export class AuthService {
   private isAuthenticated = false;
   constructor(
     private router: Router,
-    private afa: AngularFireAuth
+    private afa: AngularFireAuth,
+    private trainingService: TrainingService
   ) { }
 
+  initAuthListener() {
+    this.afa.authState.subscribe((user) => {
+      if (user) {
+        console.log('user logged in');
+        this.isAuthenticated = true;
+        this.authChange.next(true);
+        this.router.navigate(['/training']);
+      } else {
+        console.log('user not logged in')
+        this.isAuthenticated = false;
+        this.authChange.next(false);
+        this.router.navigate(['/login']);
+        this.trainingService.cancelSubscription();
+      }
+    })
+  }
   userRegister(authData: iAuthData) {
     // this.user = {
     //   email: authData.email,
     //   userId: Math.round(Math.random()*10000).toString()
     // }
     this.afa.auth.createUserWithEmailAndPassword(authData.email, authData.password)
-      .then((res) => {
-        console.log(res);
-        this.authSuccessful();
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-    
+    // .then((res) => {
+    //   console.log(res);
+    //   this.authSuccessful();
+    // })
+    // .catch((err) => {
+    //   console.log(err);
+    // })
+
   }
 
   login(authData: iAuthData) {
@@ -39,19 +57,19 @@ export class AuthService {
     //   userId: Math.round(Math.random() * 10000).toString()
     // }
     this.afa.auth.signInWithEmailAndPassword(authData.email, authData.password)
-    .then((res)=>{
-      console.log(res);
-      this.authSuccessful();
-    })
-    .catch((err) => {
-      console.log(err);
-    })
+    // .then((res) => {
+    //   console.log(res);
+    //   this.authSuccessful();
+    // })
+    // .catch((err) => {
+    //   console.log(err);
+    // })
   }
 
   logout() {
     // this.user = null;
     this.afa.auth.signOut();
-    this.authUnsuccessful();
+    // this.authUnsuccessful();
 
   }
 
@@ -65,16 +83,17 @@ export class AuthService {
     return this.isAuthenticated;
   }
 
-  authSuccessful() {
-    this.isAuthenticated = true;
-    this.authChange.next(true);
-    this.router.navigate(['/training']);
-  }
+  // authSuccessful() {
+  //   this.isAuthenticated = true;
+  //   this.authChange.next(true);
+  //   this.router.navigate(['/training']);
+  // }
 
-  authUnsuccessful() {
-    this.isAuthenticated = false;
-    this.authChange.next(false);
-    this.router.navigate(['/login']);
-  }
+  // authUnsuccessful() {
+  //   this.isAuthenticated = false;
+  //   this.authChange.next(false);
+  //   this.router.navigate(['/login']);
+  //   this.trainingService.cancelSubscription();
+  // }
 
 }
