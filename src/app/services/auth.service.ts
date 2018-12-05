@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { TrainingService } from './training.service';
 import { MatSnackBar } from '@angular/material';
+import { UiService } from './ui.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -17,7 +18,8 @@ export class AuthService {
     private router: Router,
     private afa: AngularFireAuth,
     private trainingService: TrainingService,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private uiService: UiService
   ) { }
 
   initAuthListener() {
@@ -41,30 +43,35 @@ export class AuthService {
     //   email: authData.email,
     //   userId: Math.round(Math.random()*10000).toString()
     // }
+    this.uiService.loadingStateChanged.next(true);
     this.afa.auth.createUserWithEmailAndPassword(authData.email, authData.password)
-      // .then((res) => {
-      //   console.log(res);
-      //   this.authSuccessful();
-      // })
+      .then((res) => {
+        this.uiService.loadingStateChanged.next(false);
+        // console.log(res);
+        // this.authSuccessful();
+      })
       .catch((err) => {
         console.log(err);
         this.snackbar.open(err.message, null, { duration: 5000 })
+        this.uiService.loadingStateChanged.next(false);
       })
 
   }
 
   login(authData: iAuthData) {
+    this.uiService.loadingStateChanged.next(true);
     // this.user = {
     //   email: authData.email,
     //   userId: Math.round(Math.random() * 10000).toString()
     // }
     this.afa.auth.signInWithEmailAndPassword(authData.email, authData.password)
-    // .then((res) => {
-    //   console.log(res);
-    //   this.authSuccessful();
-    // })
+    .then((res) => {
+      console.log(res);
+      this.uiService.loadingStateChanged.next(false);
+    })
     .catch((err) => {
       console.log(err);
+      this.uiService.loadingStateChanged.next(false);
       this.snackbar.open(err.message, null, { duration: 5000 })
     })
   }
