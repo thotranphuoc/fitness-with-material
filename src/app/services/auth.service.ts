@@ -5,7 +5,6 @@ import { iAuthData } from '../interfaces/auth-data.interface';
 import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { TrainingService } from './training.service';
-import { MatSnackBar } from '@angular/material';
 import { UiService } from './ui.service';
 @Injectable({
   providedIn: 'root'
@@ -18,7 +17,6 @@ export class AuthService {
     private router: Router,
     private afa: AngularFireAuth,
     private trainingService: TrainingService,
-    private snackbar: MatSnackBar,
     private uiService: UiService
   ) { }
 
@@ -52,7 +50,7 @@ export class AuthService {
       })
       .catch((err) => {
         console.log(err);
-        this.snackbar.open(err.message, null, { duration: 5000 })
+        this.uiService.showToastMessage(err.message, null, 5000);
         this.uiService.loadingStateChanged.next(false);
       })
 
@@ -65,15 +63,15 @@ export class AuthService {
     //   userId: Math.round(Math.random() * 10000).toString()
     // }
     this.afa.auth.signInWithEmailAndPassword(authData.email, authData.password)
-    .then((res) => {
-      console.log(res);
-      this.uiService.loadingStateChanged.next(false);
-    })
-    .catch((err) => {
-      console.log(err);
-      this.uiService.loadingStateChanged.next(false);
-      this.snackbar.open(err.message, null, { duration: 5000 })
-    })
+      .then((res) => {
+        console.log(res);
+        this.uiService.loadingStateChanged.next(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        this.uiService.loadingStateChanged.next(false);
+        this.uiService.showToastMessage(err.message, null, 5000);
+      })
   }
 
   logout() {
