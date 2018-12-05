@@ -12,8 +12,9 @@ import { map } from 'rxjs/operators';
 })
 export class NewTrainingComponent implements OnInit, OnDestroy {
   // availableExercises: iExercise[] =[];
-  availableExercises: iExercise[]
-  exercisesSubscription: Subscription
+  availableExercises: iExercise[];
+  exercisesSubscription: Subscription;
+  isLoading = true;
   constructor(
     private trainingService: TrainingService,
     private afs: AngularFirestore
@@ -24,8 +25,9 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // this.availableExercises = this.trainingService.getExerices();
     // this.availableExercises = this.afs.collection('availableExercises').valueChanges();
-    this.exercisesSubscription = this.trainingService.exercisesChanged.subscribe(exercieses=>{
+    this.exercisesSubscription = this.trainingService.exercisesChanged.subscribe(exercieses => {
       this.availableExercises = exercieses;
+      this.isLoading = false;
     })
     this.trainingService.fetchExercises()
   }
@@ -36,7 +38,7 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
     this.trainingService.startExercise(f.value.selectedID);
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.exercisesSubscription.unsubscribe();
   }
 

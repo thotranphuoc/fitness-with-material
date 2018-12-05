@@ -13,23 +13,23 @@ export class LoginComponent implements OnInit, OnDestroy {
   loginForm: FormGroup;
   isLoading = false;
   loadingSub = new Subscription();
-  constructor( 
+  constructor(
     private authService: AuthService,
     private uiService: UiService
-    ) { }
+  ) { }
 
   ngOnInit() {
-    this.loadingSub = this.uiService.loadingStateChanged.subscribe(isLoading=>{
+    this.loadingSub = this.uiService.loadingStateChanged.subscribe(isLoading => {
       this.isLoading = isLoading;
     })
-    this.loginForm  = new FormGroup({
-      email: new FormControl('', {validators: [Validators.required, Validators.email]}),
-      password: new FormControl('', { validators: [Validators.required]})
+    this.loginForm = new FormGroup({
+      email: new FormControl('', { validators: [Validators.required, Validators.email] }),
+      password: new FormControl('', { validators: [Validators.required] })
     })
 
   }
 
-  onSubmit(){
+  onSubmit() {
     console.log(this.loginForm);
     this.authService.login({
       email: this.loginForm.value.email,
@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     })
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.loadingSub.unsubscribe()
   }
 }
