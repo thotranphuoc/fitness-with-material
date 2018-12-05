@@ -5,7 +5,7 @@ import { iAuthData } from '../interfaces/auth-data.interface';
 import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { TrainingService } from './training.service';
-
+import { MatSnackBar } from '@angular/material';
 @Injectable({
   providedIn: 'root'
 })
@@ -16,7 +16,8 @@ export class AuthService {
   constructor(
     private router: Router,
     private afa: AngularFireAuth,
-    private trainingService: TrainingService
+    private trainingService: TrainingService,
+    private snackbar: MatSnackBar
   ) { }
 
   initAuthListener() {
@@ -41,13 +42,14 @@ export class AuthService {
     //   userId: Math.round(Math.random()*10000).toString()
     // }
     this.afa.auth.createUserWithEmailAndPassword(authData.email, authData.password)
-    // .then((res) => {
-    //   console.log(res);
-    //   this.authSuccessful();
-    // })
-    // .catch((err) => {
-    //   console.log(err);
-    // })
+      // .then((res) => {
+      //   console.log(res);
+      //   this.authSuccessful();
+      // })
+      .catch((err) => {
+        console.log(err);
+        this.snackbar.open(err.message, null, { duration: 5000 })
+      })
 
   }
 
@@ -61,9 +63,10 @@ export class AuthService {
     //   console.log(res);
     //   this.authSuccessful();
     // })
-    // .catch((err) => {
-    //   console.log(err);
-    // })
+    .catch((err) => {
+      console.log(err);
+      this.snackbar.open(err.message, null, { duration: 5000 })
+    })
   }
 
   logout() {
